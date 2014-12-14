@@ -16,9 +16,6 @@ DELIMITER_DEFAULT = ","
 SERVER_DEFAULT = "localhost:9200"
 
 
-#
-# Index the contents of a CSV file into ElasticSearch
-#
 def import_data(filename,
                 index_name,
                 type_name,
@@ -32,6 +29,23 @@ def import_data(filename,
                 bulk_index_count=BULKINDEX_COUNT,
                 timeout=None,
                 verify=True):
+    """
+    Index the contents of a CSV file into ElasticSearch
+    :param filename:
+    :param index_name:
+    :param type_name:
+    :param delimiter:
+    :param server:
+    :param delete_type:
+    :param field_translations:
+    :param mapping:
+    :param username:
+    :param password:
+    :param bulk_index_count:
+    :param timeout:
+    :param verify:
+    :return:
+    """
     if server is None:
         server = SERVER_DEFAULT
 
@@ -79,10 +93,10 @@ def import_data(filename,
 
         print "importing data into " + full_url + " (" + str(
             bulk_index_count) + " rows at a time) from file " + filename
-        count = es.bulk_index_docs(reader, \
-                                   index_name, \
-                                   type_name, \
-                                   bulk_index_count, \
+        count = es.bulk_index_docs(reader,
+                                   index_name,
+                                   type_name,
+                                   bulk_index_count,
                                    show_status)
 
         # indicate completion
@@ -96,11 +110,15 @@ def import_data(filename,
     return
 
 
-#
-# Returns iterable with new field names based on the instructions in a
-# CSV field translations file.
-#
 def translate_fields_reader(data_lines, field_translations_path, delimiter):
+    """
+    Returns iterable with new field names based on the instructions in a
+    CSV field translations file.
+    :param data_lines:
+    :param field_translations_path:
+    :param delimiter:
+    :return:
+    """
     reader = csv.DictReader(data_lines, delimiter=delimiter)
     fieldtranslation_lines = utils.retrieve_file_lines(field_translations_path)
 
